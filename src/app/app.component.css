@@ -1,0 +1,15 @@
+.card {
+
+	width: 70vh;
+
+}
+
+a {
+	cursor: pointer;
+	color: blue;
+}
+
+img {
+	width: 30vh;
+	height: 30vh;
+}

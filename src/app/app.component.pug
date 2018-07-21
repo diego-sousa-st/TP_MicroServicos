@@ -1,20 +1,90 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+//login
+form.container(*ngIf='isLogin', [formGroup]='formularioLogin')
+
+	.row
+		.col-12
+			.d-flex.justify-content-center.align-items-center
+				.card
+					.card-header
+						span Faça login ou
+						a((click)='isCadastro = true; isLogin = false')  Cadastre-se!
+					.card-body
+						.form-group
+							label Email
+							input.form-control(type='email', [(ngModel)]='email', formControlName='email')
+						.form-group
+							label Senha
+							input.form-control(type='password', [(ngModel)]='senha', formControlName='senha')
+
+						button.btn.btn-primary((click)='login()') Login
+
+//cadastro
+form.container(*ngIf='isCadastro', [formGroup]='formularioLogin')
+
+	.row
+		.col-12
+			.d-flex.justify-content-center.align-items-center
+					.card
+						.card-header
+							span Cadastre-se ou
+							a((click)='isCadastro = false; isLogin = true')  Faça login!
+
+						.card-body
+							.form-group
+								label Email
+								input.form-control(type='email', [(ngModel)]='email', formControlName='email')
+							.form-group
+								label Senha
+								input.form-control(type='password', [(ngModel)]='senha', formControlName='senha')
+
+							button.btn.btn-primary((click)='cadastro()') Cadastrar
+
+//produtos
+div(*ngIf='canMakeActions')
+	nav.navbar.navbar-dark.bg-primary
+		button.btn.btn-primary.mr-3((click)='deslogar()') Logout
+		button.btn.btn-primary.mr((click)='showCadastroProduto()') Cadastrar produto
+
+
+	//criar produto
+	form.container(*ngIf='isCadastroProduto', [formGroup]='formularioProduto')
+		.row
+			.col-12
+				.d-flex.justify-content-center.align-items-center
+						.card
+							.card-header
+								span Cadastro de produto
+
+							.card-body
+								.form-group
+									label Nome
+									input.form-control(type='text', [(ngModel)]='produto.nome', formControlName='nome')
+								.form-group
+									label descricao
+									input.form-control(type='text', [(ngModel)]='produto.descricao', formControlName='descricao')
+								.form-group
+									label Valor
+									input.form-control(type='number', [(ngModel)]='produto.valor', formControlName='valor')
+								.form-group
+									label Url da imagem do produto
+									input.form-control(type='text', [(ngModel)]='produto.imageUrl', formControlName='imageUrl')
+
+								button.btn.btn-primary((click)='cadastrarProduto()') Cadastrar
+
+	//listar produtos
+	.row(*ngIf='!isCadastroProduto')
+		div.col-6(*ngFor='let produto of produtosAdicionados')
+				.card
+					.card-header
+						span {{produto.nome}}
+
+					.card-body
+						.row
+							label.mr-2 Descrição:
+							span {{produto.descricao}}
+						.row
+							label.mr-2 Valor:
+							span R${{produto.valor}}
+						.row
+							img([src]='produto.imageUrl')
 
