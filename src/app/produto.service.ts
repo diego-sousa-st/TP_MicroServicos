@@ -25,25 +25,25 @@ export class ProdutoService {
 
 	}
 
-	createProduto(produto: Produto): void {
+	createProduto(produto: Produto): Observable<any> {
 
-		debugger
 		const res = api.CREATE_PRODUTO.replace('{idToken}', this.idToken);
 
-		this.httpClientService.post(api.BASE_PRODUTO_API+res, produto)
-			.subscribe((data) => {
-
-				debugger;
-
-			});
+		return this.httpClientService.post(api.BASE_PRODUTO_API+res, produto);
 
 	}
 
-	updateProduto(): void{
+	updateProduto(produto: Produto): Observable<any> {
+
+		return this.httpClientService.put(api.BASE_PRODUTO_API+api.UPDATE_PRODUTO.replace('{idProduto}', produto.key)
+			.replace('{idToken}',this.idToken), produto);
 
 	}
 
-	deleteProduto(): void {
+	deleteProduto(produto: Produto): Observable<any>{
+
+		return this.httpClientService.delete(api.BASE_PRODUTO_API+api.DELETE_PRODUTOS.replace('{idProduto}', produto.key)
+			.replace('{idToken}',this.idToken));
 
 	}
 }

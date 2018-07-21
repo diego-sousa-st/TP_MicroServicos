@@ -5,6 +5,7 @@ export class Produto {
 	valor: number;
 	usuario: string;
 	imageUrl: string;
+	key: string;
 
 	constructor() {
 	}

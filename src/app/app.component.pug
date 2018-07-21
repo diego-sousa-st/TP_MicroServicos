@@ -4,7 +4,7 @@ form.container(*ngIf='isLogin', [formGroup]='formularioLogin')
 	.row
 		.col-12
 			.d-flex.justify-content-center.align-items-center
-				.card
+				.card.my-5
 					.card-header
 						span Faça login ou
 						a((click)='isCadastro = true; isLogin = false')  Cadastre-se!
@@ -24,7 +24,7 @@ form.container(*ngIf='isCadastro', [formGroup]='formularioLogin')
 	.row
 		.col-12
 			.d-flex.justify-content-center.align-items-center
-					.card
+					.card.my-5
 						.card-header
 							span Cadastre-se ou
 							a((click)='isCadastro = false; isLogin = true')  Faça login!
@@ -51,9 +51,10 @@ div(*ngIf='canMakeActions')
 		.row
 			.col-12
 				.d-flex.justify-content-center.align-items-center
-						.card
+						.card.my-5
 							.card-header
-								span Cadastro de produto
+								span(*ngIf='!isProductUpdate()') Cadastro de produto
+								span(*ngIf='isProductUpdate()') Atualização de produto
 
 							.card-body
 								.form-group
@@ -69,12 +70,13 @@ div(*ngIf='canMakeActions')
 									label Url da imagem do produto
 									input.form-control(type='text', [(ngModel)]='produto.imageUrl', formControlName='imageUrl')
 
-								button.btn.btn-primary((click)='cadastrarProduto()') Cadastrar
+								button.btn.btn-primary(*ngIf='!isProductUpdate()',(click)='cadastrarProduto()') Cadastrar
+								button.btn.btn-primary(*ngIf='isProductUpdate()',(click)='atualizarProduto()') Atualizar
 
 	//listar produtos
 	.row(*ngIf='!isCadastroProduto')
-		div.col-6(*ngFor='let produto of produtosAdicionados')
-				.card
+		div.col-6.d-flex.justify-content-center(*ngFor='let produto of produtosAdicionados')
+				.card.mx-2.my-2
 					.card-header
 						span {{produto.nome}}
 
@@ -86,5 +88,8 @@ div(*ngIf='canMakeActions')
 							label.mr-2 Valor:
 							span R${{produto.valor}}
 						.row
-							img([src]='produto.imageUrl')
+							.col-12.d-flex.justify-content-center
+								button.btn.btn-secondary.mr-2.btn-circle((click)='updateProduto(produto.key)') Atualizar
+								img([src]='produto.imageUrl')
+								button.btn.btn-danger.ml-2.btn-circle((click)='deleteProduto(produto.key)') Excluir
 

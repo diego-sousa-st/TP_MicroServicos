@@ -9,3 +9,5 @@ export const api = {
 	GET_PRODUTOS: '/produtos.json',
 	DELETE_PRODUTOS: '/produtos/{idProduto}.json?auth={idToken}'
 }
+
+export const erroPadrao = 'Erro ao realizar operacao!';

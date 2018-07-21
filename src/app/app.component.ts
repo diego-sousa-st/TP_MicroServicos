@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Produto } from './Produto.model';
 import { UserService } from './user.service';
 import { ProdutoService } from './produto.service';
+import { erroPadrao } from './estoque.constants';
 
 @Component({
 	selector: 'app-root',
@@ -32,6 +33,8 @@ export class AppComponent implements OnInit{
 	produtosAdicionados: Produto[] = [];
 
 	canMakeActions: boolean = false;
+	isProductUpdatee: boolean = false;
+	keyUsed: string;
 
 	constructor(private formBuilder: FormBuilder, private userService: UserService, private produtoService: ProdutoService) {
 
@@ -79,9 +82,9 @@ export class AppComponent implements OnInit{
 			.subscribe((data) => {
 
 				this.dataAfterLogin = data;
+				this.produto.usuario = data.localId;
 				this.setMakeActions(true);
 				this.produtoService.setIdToken(this.dataAfterLogin.idToken);
-				debugger;
 
 			});
 
@@ -107,12 +110,32 @@ export class AppComponent implements OnInit{
 	showCadastroProduto() {
 
 		this.isCadastroProduto = true;
+		this.isProductUpdatee = false;
+		this.resetProduto();
+
+	}
+
+	resetProduto() {
+
+		this.produto.descricao = undefined;
+		this.produto.imageUrl = undefined;
+		this.produto.nome = undefined;
+		this.produto.key = undefined;
+		this.produto.valor = undefined;
 
 	}
 
 	cadastrarProduto() {
 
-		this.produtoService.createProduto(this.produto);
+		this.produtoService.createProduto(this.produto).subscribe(
+			(key) => {
+
+				this.isCadastroProduto = false;
+				this.getProdutos();
+
+			},
+			error => alert(erroPadrao)
+		);
 
 	}
 
@@ -134,6 +157,90 @@ export class AppComponent implements OnInit{
 				});
 
 			});
+
+	}
+
+	findIndexProduto(elemento: any) {
+
+		return elemento.key === this.keyUsed;
+
+	}
+
+	updateProduto(key: string) {
+
+		this.isProductUpdatee = true;
+		this.isCadastroProduto = true;
+		this.keyUsed = key;
+
+		this.produtosAdicionados.forEach(produto => {
+
+			if(produto.key === key) {
+
+				this.produto = produto;
+				return;
+
+			}
+
+		});
+
+	}
+
+
+	atualizarProduto() {
+
+		this.produtoService.updateProduto(this.produto).subscribe(
+			(response) => {
+
+				this.isCadastroProduto = false;
+				this.getProdutos();
+
+			},
+			error => {
+				debugger;
+				alert(erroPadrao)
+			}
+		);
+
+		this.isProductUpdatee = false;
+		this.isCadastroProduto = false;
+
+	}
+
+	isProductUpdate(): boolean  {
+
+		return this.isProductUpdatee;
+
+	}
+
+	deleteProduto(key: string) {
+
+		this.produtosAdicionados.forEach(produto => {
+
+			if(produto.key === key) {
+
+				this.produto = produto;
+				return;
+
+			}
+
+		});
+
+
+		this.produtoService.deleteProduto(this.produto).subscribe(
+			(response) => {
+
+				this.isCadastroProduto = false;
+				this.getProdutos();
+
+			},
+			error => {
+				debugger;
+				alert(erroPadrao)
+			}
+		);
+
+		this.isProductUpdatee = false;
+		this.isCadastroProduto = true;
 
 	}
 
